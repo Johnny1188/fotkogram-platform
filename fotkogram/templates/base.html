@@ -12,9 +12,6 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/cover/">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <!-- Bootstrap core CSS -->
-<link href="/docs/4.4/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
 
     <style>
       .bd-placeholder-img {
@@ -33,30 +30,63 @@
       }
     </style>
     <!-- Custom styles for this template -->
-    <link href="cover.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/771e920a06.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'base.css' %}">
   </head>
 
   <body class="text-center">
-    <div class="container">
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="masthead mb-auto">
-        <div class="inner">  
-        <a href="{% url 'home' %}" class="headline-a"><h1 class="masthead-brand"><i class="fas fa-images"></i>  Fotkogram</h1></a>
-        <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link active" href="#">Home</a>
-            <a class="nav-link" href="#">Features</a>
-            <a class="nav-link" href="#">Contact</a>
-        </nav>
-        </div>
+      <div class="inner">
+          <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+              <a href="{% url 'home' %}" class="headline-a"><h1 class="masthead-brand"><i class="fas fa-images"></i>  Fotkogram</h1></a>
+              <div class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                  <a class="nav-link nav_links" href="{% url 'createpost' %}" style="margin: auto;"><i class="fas fa-plus-square create_post_icon"></i></a>
+                  <a class="nav-link nav_links" href="{% url 'home' %}">Home</a>
+                  <a class="nav-link nav_links" href="accounts/{{ request.user.id }}">My profile</a>
+                  <a class="nav-link nav_links" href="javascript:{document.getElementById('logout').submit()}">Logout</a>
+                  <form id="logout" action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden">
+                  </form>
+                {% else %}
+                  <a class="nav-link nav_links" href="{% url 'crossroad' %}">Home</a>
+                  <a class="nav-link nav_links" href="{% url 'signup' %}">Signup</a>
+                  <a class="nav-link nav_links" href="{% url 'login' %}">Login</a>
+                {% endif %}
+              </div>
+            </div>
+          </nav>
+      </div>
     </header>
 
+    <div id="modal_window">
+      <div id="modal_box">
+        <div id="modal_img_container">
+        </div>
+        <div id="modal_box_text_container">
+          <p id="modal_box_text"></p>
+          <hr>
+          <div id="form_container">
+      
+          </div>
+        </div>
+
+        <div class="cross_icon_container" id="cross_icon_container">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
+    
       {% block content %}
       {% endblock %}
-  </div>
+    </div>
 
-  <footer class="mastfoot mt-auto">
+  <footer class="text-muted mastfoot mt-auto">
     <div class="inner">
       <p>Fotkogram {% now "Y" %}</p>
     </div>
@@ -65,5 +95,6 @@
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="{% static 'base.js' %}"></script>
 </body>
 </html>

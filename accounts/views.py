@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
+from .models import Profile
+from images.models import Post
 
 def signup(request):
     if request.method == 'POST':
@@ -11,6 +14,9 @@ def signup(request):
                     return render(request, 'accounts/signup.html', {'error':'Username has already been taken :('})
                 except User.DoesNotExist:
                     user = User.objects.create_user(request.POST['username'], password=request.POST['password'])
+                    user_profile = Profile()
+                    user_profile.user = user
+                    user_profile.save()
                     auth.login(request, user)
                     return redirect('home')
             else:
@@ -40,3 +46,13 @@ def logout(request):
         return redirect('home')
     else:
         return render(request, 'accounts/login.html', {'error': 'Some technical flaw, sorry for that :('})
+
+@login_required(login_url='/crossroad')
+def user_showcase(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+        profile = Profile.objects.get(user=user)
+        posts = Post.objects.filter(publisher=user_id)
+        return render(request, 'accounts/user_showcase.html', {'user':user, 'profile': profile, 'posts':posts})
+    except User.DoesNotExist:
+        return redirect('home')

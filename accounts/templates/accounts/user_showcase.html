@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <img src="{{ profile.profile_pic.url }}" alt="Profile picture of {{ user.username }}" class="profile_pic">
+    <h1 class="profile_username">{{ user.username }}</h1>
+    <div class="profile_posts_box row">
+        {% for posts in posts.all %}
+        <div class="col-4 user_showcase_post_box">
+            <img src="{{ posts.image.url }}" alt="post">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

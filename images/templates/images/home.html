@@ -1,5 +1,48 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% for post in posts %}
+    <br>
+    <br>
+    <br>
+        <div class="w-50 post_container post_box" id="{{ post.id }}">
+            <div class="publisher_container">
+                <h6>{{ post.publisher.username }}</h6>
+            </div>
+            <div class="post" id="{{ post.id }}">
+                <div class="w-100 post_img_container" id="{{ post.id }}_post_image">
+                    <img src="{{ post.image.url }}" class="img-fluid" alt="post image">
+                </div>
+                <div class="col-12 p-0 post_text_field" id="{{ post.id }}_post_text">
+                    <h5 style="display:none">{{ post.text }}</h5>
+                    <p class="p-2 mb-0">{{ post.short_text }}</p>
+                </div>
+            </div>
+            <div class="row w-100 m-0 like_comm_bar">
+                <a href="javascript:{document.getElementById('like{{ post.id }}').submit()}" class="col-6"><div class="like" style="">Like ({{ post.number_of_likes }})</div></a>
+                <div class="col-6 comment" id="{{ post.id }}_post_comment">Comment</div>
+            </div>
+            <form id="like{{ post.id }}" method="POST" action="{% url 'like' post.id user.id %}">
+                {% csrf_token %}
+                <input type="hidden">
+            </form>
+            <div id="{{ post.id }}_form">
+                <form action="{% url 'comment' post.id user.id %}" method="POST" class="comment_form">
+                    {% csrf_token %}
+                    <h6>Comment:</h6>
+                    <input type="text" name="comment_text">
+                    <input type="submit" value="SUBMIT">
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if posts.has_previous %}
+        <a href="?page={{ posts.previous_page_number }}"><- previous</a>     
+    {% endif %}
+
+    {% if posts.has_next %}
+        <a href="?page={{ posts.next_page_number }}">next -></a>     
+    {% endif %}
 
 {% endblock %}

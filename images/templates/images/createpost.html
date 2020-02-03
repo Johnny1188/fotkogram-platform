@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if error %}
+    {{ error }}
+    <br>
+    <br>
+    {% endif %}
+
+    <br>
+    <h1 class="mt-5">Create an image post</h1>
+    <br>
+    <form action="{% url 'createpost' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="image"><b>Image:</b></label>
+        <input type="file" name="image">
+        <br>
+        <br>
+        <textarea name="text" cols="40" rows="3" placeholder="Add something..."></textarea>
+        <br>
+        <br>
+        <input type="submit" name="submit" class="btn btn-primary" value="Post it">
+    </form>
+{% endblock %}
